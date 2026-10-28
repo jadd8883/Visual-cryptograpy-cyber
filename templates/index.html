@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Visual Cryptography System</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 800px;
+        margin: 40px auto;
+        padding: 20px;
+        background: #f4f6f9;
+        color: #202938;
+      }
+
+      section {
+        background: white;
+        padding: 22px;
+        margin: 20px 0;
+        border-radius: 12px;
+      }
+
+      input,
+      button {
+        display: block;
+        margin: 14px 0;
+      }
+
+      button {
+        padding: 10px 16px;
+        cursor: pointer;
+        background: #175cd3;
+        color: white;
+        border: 0;
+        border-radius: 6px;
+      }
+
+      a {
+        display: inline-block;
+        margin: 8px;
+      }
+      .error {
+        color: #b42318;
+      }
+      .success {
+        color: #067647;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Visual Cryptography System</h1>
+    <p>Split an image into two shares and reconstruct it.</p>
+
+    {% if message %}
+    <p class="success">{{ message }}</p>
+    {% endif %} {% if error %}
+    <p class="error">{{ error }}</p>
+    {% endif %}
+
+    <section>
+      <h2>Generate Secret Shares</h2>
+      <form action="/generate" method="post" enctype="multipart/form-data">
+        <label for="image">Choose a secret image:</label>
+        <input
+          id="image"
+          type="file"
+          name="image"
+          accept=".png,.jpg,.jpeg"
+          required
+        />
+        <button type="submit">Generate Shares</button>
+      </form>
+
+      {% if share1 and share2 %}
+      <a
+        href="{{ url_for('download_result',
+                                filename=share1) }}"
+      >
+        Download Share 1
+      </a>
+      <a
+        href="{{ url_for('download_result',
+                                filename=share2) }}"
+      >
+        Download Share 2
+      </a>
+      {% endif %}
+    </section>
+
+    <section>
+      <h2>Reconstruct Secret Image</h2>
+      <form action="/reconstruct" method="post" enctype="multipart/form-data">
+        <label for="share1">Select Share 1:</label>
+        <input
+          id="share1"
+          type="file"
+          name="share1"
+          accept=".png,.jpg,.jpeg"
+          required
+        />
+
+        <label for="share2">Select Share 2:</label>
+        <input
+          id="share2"
+          type="file"
+          name="share2"
+          accept=".png,.jpg,.jpeg"
+          required
+        />
+
+        <button type="submit">Reconstruct Image</button>
+      </form>
+
+      {% if reconstructed %}
+      <a
+        href="{{ url_for('download_result',
+                                filename=reconstructed) }}"
+      >
+        Download Reconstructed Image
+      </a>
+      {% endif %}
+    </section>
+  </body>
+</html>
